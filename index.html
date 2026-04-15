@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Home Chef by Amna | Authentic Pakistani Menu</title>
+    <!-- html2pdf + jspdf for export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;600&family=Lato:wght@300;400;700&display=swap');
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: #0e1c0e;
+        padding: 24px 16px;
+        font-family: 'Lato', sans-serif;
+      }
+
+      .menu-wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        background: #0a1f0a;
+        padding: 20px 16px 30px;
+        border-radius: 32px;
+        box-shadow: 0 20px 35px rgba(0,0,0,0.5);
+        position: relative;
+      }
+
+      /* brand header with actual logo as per image text */
+      .brand-header {
+        text-align: center;
+        padding: 20px 20px 20px;
+        background: linear-gradient(145deg, #0d2b0d 0%, #102510 100%);
+        border: 1px solid #c9a84c66;
+        border-radius: 28px;
+        margin-bottom: 24px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px;
+        background: #f8f2e0;
+        padding: 12px 28px;
+        border-radius: 70px;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+        border: 1px solid #c9a84c;
+      }
+
+      .logo-text-main {
+        font-family: 'Playfair Display', serif;
+        font-weight: 900;
+        font-size: 38px;
+        line-height: 1;
+        color: #2a5e2a;
+        letter-spacing: 2px;
+      }
+
+      .logo-text-sub {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 20px;
+        font-weight: 600;
+        color: #b8860b;
+        border-left: 2px solid #c9a84c;
+        padding-left: 15px;
+      }
+
+      .logo-handwritten {
+        font-family: 'Playfair Display', serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: #c9a84c;
+        background: #1f2f0f;
+        padding: 6px 18px;
+        border-radius: 40px;
+        letter-spacing: 1.5px;
+      }
+
+      .brand-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 32px;
+        font-weight: 800;
+        color: #f0e0b0;
+      }
+
+      .tagline {
+        font-family: 'Lato', sans-serif;
+        font-weight: 300;
+        font-size: 11px;
+        color: #c0dbb0;
+        background: #0f200f80;
+        padding: 5px 16px;
+        border-radius: 30px;
+      }
+
+      .dish-showcase {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        margin: 18px 0 12px;
+        flex-wrap: wrap;
+      }
+
+      .dish-card {
+        background: #132813;
+        border-radius: 28px;
+        padding: 6px 12px;
+        text-align: center;
+        width: 100px;
+        border: 1px solid #c9a84c44;
+        transition: transform 0.1s ease;
+      }
+      .dish-card:hover { transform: scale(1.02); background: #1e3a1e; }
+
+      .dish-emoji { font-size: 38px; }
+      .dish-label { font-size: 11px; font-weight: 500; color: #f5f5dc; letter-spacing: 0.5px; }
+
+      .section-card {
+        background: #0f1f0f;
+        border: 1px solid #2a4a2a;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        overflow: hidden;
+      }
+
+      .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: #c9a84c;
+        letter-spacing: 3px;
+        text-align: center;
+        padding: 16px 20px 12px;
+        border-bottom: 1px solid #1e3a1e;
+        background: #0b190b;
+      }
+
+      .subsection {
+        padding: 14px 18px;
+        border-bottom: 1px solid #182818;
+      }
+      .subsection:last-child { border-bottom: none; }
+
+      .subsection-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: #8aad7a;
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+        border-bottom: 1px dashed #1e3a1e;
+      }
+
+      .menu-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 10px;
+        background: #132013;
+        border-radius: 12px;
+        border: 1px solid #1e3a1e;
+        gap: 6px;
+      }
+
+      .item-name { font-size: 12.5px; color: #e0f0e0; flex:1; font-weight: 400; }
+      .item-price {
+        font-family: 'Playfair Display', serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: #c9a84c;
+        background: #1e340e;
+        padding: 3px 8px;
+        border-radius: 6px;
+        white-space: nowrap;
+      }
+
+      .menu-item-full {
+        grid-column: 1/-1;
+        display: flex;
+        justify-content: space-between;
+        padding: 9px 12px;
+        background: #132013;
+        border-radius: 12px;
+        border: 1px solid #1e3a1e;
+      }
+
+      .full-name { font-size: 13px; font-weight: 500; color: #ecf5e6; }
+      .full-price {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: #c9a84c;
+        background: #1e340e;
+        padding: 4px 10px;
+        border-radius: 6px;
+      }
+      .full-note { font-size: 9px; color: #7f9f6f; }
+
+      .highlight-item { background: #1e3012 !important; border-color: #c9a84c77 !important; }
+
+      .contact-bar {
+        background: linear-gradient(135deg, #1a3a1a, #0f2a0f);
+        border: 1px solid #c9a84c99;
+        border-radius: 24px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .contact-number { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #c9a84c; letter-spacing: 1px; }
+      .order-btn {
+        background: #c9a84c;
+        color: #0a1f0a;
+        border: none;
+        border-radius: 40px;
+        padding: 10px 24px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.2s;
+        font-family: 'Lato', sans-serif;
+      }
+      .order-btn:hover { background: #e0bc6a; transform: scale(1.02); }
+
+      .delivery-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #1a2f0a;
+        border: 1px solid #c9a84c66;
+        border-radius: 40px;
+        padding: 5px 14px;
+        font-size: 12px;
+      }
+      .free-badge { background: #c9a84c33; color: #ffdf99; border-radius: 20px; padding: 2px 8px; margin-left: 6px; }
+
+      .export-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .export-btn {
+        background: #2a4a2a;
+        border: 1px solid #c9a84c;
+        color: #f0e0b0;
+        padding: 8px 22px;
+        border-radius: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .export-btn:hover { background: #3a5e3a; border-color: #e0bc6a; }
+      .special-note { background: #132013; border-left: 4px solid #c9a84c; padding: 10px 14px; margin: 12px 18px; font-size: 12px; border-radius: 12px; color: #cbdcc0; }
+      .page-label { font-size: 9px; letter-spacing: 2px; color: #7a9e6e; text-align: center; margin: 6px 0; font-weight: 500; }
+    </style>
+</head>
+<body>
+<div class="menu-wrap" id="menuContainer">
+  
+  <!-- LOGO SECTION exactly as given "HOME CHEF by Amna PAKISTANI FOOD MIX" -->
+  <div class="brand-header">
+    <div class="logo-container">
+      <div class="logo-text-main">HOME<br>CHEF</div>
+      <div class="logo-text-sub">by Amna</div>
+    </div>
+    <div class="logo-handwritten">✦ PAKISTANI FOOD MIX ✦</div>
+    <div class="brand-name">Home Chef by Amna</div>
+    <div class="tagline">Homemade Taste • Authentic Recipes • Pure Love</div>
+  </div>
+
+  <!-- UPDATED DISH SHOWCASE: adding "Paratha & Egg" card with correct spelling -->
+  <div class="dish-showcase">
+    <div class="dish-card"><div class="dish-emoji">🍲🥘</div><div class="dish-label">Karahi</div></div>
+    <div class="dish-card"><div class="dish-emoji">🍚🍗</div><div class="dish-label">Biryani</div></div>
+    <div class="dish-card"><div class="dish-emoji">🥟🍳</div><div class="dish-label">Paratha & Egg</div></div>
+    <div class="dish-card"><div class="dish-emoji">🍛🌿</div><div class="dish-label">Daal</div></div>
+  </div>
+
+  <div class="page-label">— 🌞 Breakfast Menu 🌞 —</div>
+  <!-- Breakfast section with all spelling corrections + consistent naming -->
+  <div class="section-card">
+    <div class="section-title">✦ Breakfast Delights ✦</div>
+    <div class="subsection"><div class="subsection-label">🥟 Parathas</div>
+      <div class="menu-grid">
+        <div class="menu-item"><div class="item-name">Saada Paratha</div><div class="item-price">Rs. 80</div></div>
+        <div class="menu-item"><div class="item-name">Aloo Paratha</div><div class="item-price">Rs. 150</div></div>
+        <div class="menu-item"><div class="item-name">Nutella Paratha</div><div class="item-price">Rs. 200</div></div>
+        <div class="menu-item"><div class="item-name">Chicken Cheese Paratha</div><div class="item-price">Rs. 200</div></div>
+      </div>
+    </div>
+    <div class="subsection"><div class="subsection-label">🍳 Eggs Corner</div>
+      <div class="menu-grid">
+        <div class="menu-item"><div class="item-name">Half Fry Anda</div><div class="item-price">Rs. 70</div></div>
+        <div class="menu-item"><div class="item-name">Full Fry Anda</div><div class="item-price">Rs. 70</div></div>
+        <div class="menu-item"><div class="item-name">Saada Omelette</div><div class="item-price">Rs. 80</div></div>
+        <div class="menu-item"><div class="item-name">Anda Pyaz Omelette</div><div class="item-price">Rs. 100</div></div>
+      </div>
+    </div>
+    <div class="subsection"><div class="subsection-label">🍞 Toast & Sides</div>
+      <div class="menu-grid">
+        <div class="menu-item"><div class="item-name">Saada Toast (1 slice)</div><div class="item-price">Rs. 30</div></div>
+        <div class="menu-item"><div class="item-name">French Toast (1 slice)</div><div class="item-price">Rs. 50</div></div>
+        <div class="menu-item"><div class="item-name">Aloo Bhujia</div><div class="item-price">Rs. 150</div></div>
+      </div>
+    </div>
+    <div class="subsection"><div class="subsection-label">☕ Chai & Cold Drinks</div>
+      <div class="menu-grid">
+        <div class="menu-item"><div class="item-name">Saada Chai</div><div class="item-price">Rs. 100</div></div>
+        <div class="menu-item"><div class="item-name">Doodh Patti</div><div class="item-price">Rs. 150</div></div>
+        <div class="menu-item"><div class="item-name">Elaichi Chai</div><div class="item-price">Rs. 120</div></div>
+        <div class="menu-item"><div class="item-name">Cold Drink 345ml</div><div class="item-price">Rs. 90</div></div>
+        <div class="menu-item"><div class="item-name">Cold Drink 500ml</div><div class="item-price">Rs. 130</div></div>
+        <div class="menu-item"><div class="item-name">Cold Drink 1L</div><div class="item-price">Rs. 160</div></div>
+        <div class="menu-item"><div class="item-name">Cold Drink 1.5L</div><div class="item-price">Rs. 220</div></div>
+        <div class="menu-item"><div class="item-name">Pani ki Bottle (small)</div><div class="item-price">Rs. 70</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-label">— 🍛 Lunch & Dinner —</div>
+  <div class="section-card">
+    <div class="section-title">✦ Classic Lunch/Dinner ✦</div>
+    <!-- Sabzi & Daal updated: corrected spelling "Anda Pyaz Tamatar" (tamater -> tamatar) -->
+    <div class="subsection"><div class="subsection-label">🥬 Sabzi, Daal & Egg Special</div>
+      <div class="menu-grid">
+        <div class="menu-item"><div class="item-name">Mix Sabzi</div><div class="item-price">Rs. 150</div></div>
+        <div class="menu-item"><div class="item-name">Daal Maash</div><div class="item-price">Rs. 150</div></div>
+        <div class="menu-item highlight-item"><div class="item-name">Anda Pyaz Tamatar</div><div class="item-price">Rs. 200</div></div>
+      </div>
+    </div>
+    <!-- Chicken Specials: includes Plate Chicken Karahi (spelling corrected) -->
+    <div class="subsection"><div class="subsection-label">🍗 Chicken Specials</div>
+      <div class="menu-grid">
+        <div class="menu-item"><div class="item-name">Chicken Curry</div><div class="item-price">Rs. 200</div></div>
+        <div class="menu-item highlight-item"><div class="item-name">Plate Chicken Karahi</div><div class="item-price">Rs. 300</div></div>
+      </div>
+    </div>
+    <!-- Separate section for Salad Fresh & Raita (each 50) -->
+    <div class="subsection"><div class="subsection-label">🥗 Sides & Raita</div>
+      <div class="menu-grid">
+        <div class="menu-item"><div class="item-name">Salad Fresh</div><div class="item-price">Rs. 50</div></div>
+        <div class="menu-item"><div class="item-name">Raita Podina Zeera</div><div class="item-price">Rs. 50</div></div>
+      </div>
+    </div>
+    <div class="subsection"><div class="subsection-label">🥖 Roti / Naan</div>
+      <div class="menu-grid">
+        <div class="menu-item"><div class="item-name">Roti</div><div class="item-price">Rs. 30</div></div>
+        <div class="menu-item"><div class="item-name">Naan</div><div class="item-price">Rs. 40</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-label">— 🔥 Signature Menu 🔥 —</div>
+  <div class="section-card">
+    <div class="section-title">✦ Chef's Signatures ✦</div>
+    <!-- Rice Masterpieces: added Yakhni Pulao 350 with correct spelling -->
+    <div class="subsection"><div class="subsection-label">🍚 Rice Masterpieces</div>
+      <div class="menu-grid">
+        <div class="menu-item"><div class="item-name">Qabuli Pulao</div><div class="item-price">Rs. 800</div></div>
+        <div class="menu-item"><div class="item-name">Mandi</div><div class="item-price">Rs. 900</div></div>
+        <div class="menu-item"><div class="item-name">Chicken Biryani</div><div class="item-price">Rs. 350</div></div>
+        <div class="menu-item"><div class="item-name">Chana Pulao</div><div class="item-price">Rs. 250</div></div>
+        <div class="menu-item"><div class="item-name">Masar Chawal</div><div class="item-price">Rs. 300</div></div>
+        <div class="menu-item highlight-item"><div class="item-name">Yakhni Pulao</div><div class="item-price">Rs. 350</div></div>
+      </div>
+    </div>
+    <div class="subsection"><div class="subsection-label">🍲 Karahi & Curries</div>
+      <div class="menu-grid">
+        <div class="menu-item-full"><div><div class="full-name">Chicken Karahi — Full</div><div class="full-note">Serves 4-6</div></div><div class="full-price">Rs. 1600</div></div>
+        <div class="menu-item-full"><div><div class="full-name">Chicken Karahi — Half</div><div class="full-note">Serves 2-3</div></div><div class="full-price">Rs. 850</div></div>
+        <div class="menu-item-full highlight-item"><div><div class="full-name">Kabab Karahi</div><div class="full-note">Smoky & rich</div></div><div class="full-price">Rs. 1100</div></div>
+        <div class="menu-item-full"><div><div class="full-name">Nihari</div><div class="full-note">Slow-cooked classic</div></div><div class="full-price">Rs. 300</div></div>
+      </div>
+    </div>
+    <div class="special-note">✦ <strong style="color:#c9a84c;">Minimum Serving:</strong> 2–3 persons for signature karahi/pulao. Special orders available on request.</div>
+  </div>
+
+  <!-- Special Order Card -->
+  <div class="section-card">
+    <div class="section-title">✦ Special Order ✦</div>
+    <div style="padding: 16px 18px; font-size:13px; color:#c0d6b5;">Agar aap menu ke ilawa koi bhi <strong style="color:#c9a84c;">pasand ka khana</strong> chahte hain — to hum aap ke liye khaas tor par tayyar karein ge! Just call or WhatsApp.</div>
+  </div>
+
+  <!-- Delivery & Pickup - UPDATED ADDRESS: Near Shani Fast Food (replaced old location) -->
+  <div class="section-card">
+    <div class="section-title">✦ Delivery & Pickup ✦</div>
+    <div style="padding: 18px;">
+      <div class="delivery-tag"><span>📍</span> Near Shani Fast Food, 7th Road, Satellite Town, Rawalpindi</div>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px;">
+        <div class="delivery-tag"><span>🚚</span> 1 serving — Delivery <span class="free-badge">FREE</span></div>
+        <div class="delivery-tag"><span>📦</span> After 1km — Rs. 50 delivery charge</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact & Order -->
+  <div class="contact-bar">
+    <div>
+      <div class="contact-label" style="font-size:11px;">📞 Order Now (Call / WhatsApp)</div>
+      <div class="contact-number">03088519060</div>
+      <div class="contact-note" style="font-size:10px;">Pickup & delivery both available</div>
+    </div>
+    <button class="order-btn" onclick="window.open('https://wa.me/923088519060?text=I want to place an order from Home Chef by Amna', '_blank')">Order Now ↗</button>
+  </div>
+  <div style="text-align:center; padding-top:6px;"><div style="font-size:9px; color:#558844;">Home Chef by Amna · Homemade with love · Rawalpindi</div></div>
+</div>
+
+<!-- export buttons -->
+<div style="max-width:720px; margin: 20px auto 10px; display: flex; justify-content: center; gap: 15px;">
+  <button class="export-btn" id="pdfBtn">📄 Download PDF Menu</button>
+  <button class="export-btn" id="jpgBtn">🖼️ Save as JPG</button>
+</div>
+
+<script>
+  document.getElementById('pdfBtn').addEventListener('click', () => {
+    const element = document.getElementById('menuContainer');
+    html2pdf().set({ margin: 0.5, filename: 'HomeChef_Amna_Menu.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(element).save();
+  });
+  document.getElementById('jpgBtn').addEventListener('click', async () => {
+    const el = document.getElementById('menuContainer');
+    const canvas = await html2canvas(el, { scale: 2.5, backgroundColor: '#0a1f0a' });
+    const link = document.createElement('a');
+    link.download = 'HomeChef_Amna_Menu.jpg';
+    link.href = canvas.toDataURL('image/jpeg', 0.95);
+    link.click();
+  });
+</script>
+</body>
+</html>
